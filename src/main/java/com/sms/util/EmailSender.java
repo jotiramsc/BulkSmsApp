@@ -25,4 +25,19 @@ public class EmailSender {
 		return false;
 
 	}
+	
+	public boolean sendEmailVerificationMail(String resetToken) {
+
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+
+		mailMessage.setTo("chavanjotiram24@gmail.com");
+		mailMessage.setSubject("Email Verification");
+		mailMessage.setText("Please click below link to verifiy email:" + "http://localhost:5432/auth/verifyEmail/"+resetToken);
+
+		mailMessage.setFrom("johndoe@example.com");
+
+		javaMailSender.send(mailMessage);
+		return false;
+
+	}
 }

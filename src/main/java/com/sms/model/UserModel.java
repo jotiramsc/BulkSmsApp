@@ -19,7 +19,7 @@ public class UserModel implements UserDetails {
 
 	long mobile;
 
-	boolean validate;
+
 
 	String loginType;
 
@@ -35,6 +35,15 @@ public class UserModel implements UserDetails {
 	
 	String resetToken;	
 	
+	boolean emailVerified;
+
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
 
 	public String getResetToken() {
 		return resetToken;
@@ -68,13 +77,7 @@ public class UserModel implements UserDetails {
 		this.mobile = mobile;
 	}
 
-	public boolean isValidate() {
-		return validate;
-	}
-
-	public void setValidate(boolean validate) {
-		this.validate = validate;
-	}
+	
 
 	public String getRole() {
 		return role;

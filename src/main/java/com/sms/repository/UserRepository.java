@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<UserDomain, Long> {
 	public UserDomain findByUsernameOrEmail(String username, String email);
 
 	public UserDomain findByResetToken(String resetToken);
+	
+	public UserDomain findByEmailVerifyToken(String emailToken);
 }

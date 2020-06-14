@@ -46,6 +46,11 @@ public class UserDetailsService implements org.springframework.security.core.use
 		} else {
 			UserDomain detail = modelMapper.map(userModel, UserDomain.class);
 			detail.setPassword(bcryptEncoder.encode(detail.getPassword()));
+			detail.setEmailVerifyToken(UUID.randomUUID().toString());
+			detail.setEmailVerified(false);
+			
+			emailSender.sendEmailVerificationMail(detail.getEmailVerifyToken());
+
 			return modelMapper.map(userRepository.save(detail), UserModel.class);
 
 		}
@@ -77,8 +82,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 		String response = null;
 
-		final UserDomain userDetails = userRepository.findByUsernameOrEmail(userModel.getUsername(),
-				userModel.getEmail());
+		final UserDomain userDetails = userRepository.findByResetToken(userModel.getResetToken());
 		if (null == userDetails) {
 			response = "We could not find an account for that e-mail address";
 		} else {
@@ -91,6 +95,33 @@ public class UserDetailsService implements org.springframework.security.core.use
 				userRepository.save(userDetails);
 
 				response = "Password changed";
+
+			} else {
+
+			}
+
+		}
+
+		return response;
+
+	}
+
+	public String verifyEmail(String token) throws SmsException {
+
+		String response = null;
+
+		final UserDomain userDetails = userRepository.findByEmailVerifyToken(token);
+		if (null == userDetails) {
+			response = "We could not find an account for that e-mail address";
+		} else {
+
+			if (userDetails.getEmailVerifyToken().equalsIgnoreCase(token)) {
+
+				userDetails.setEmailVerified(true);
+				userDetails.setEmailVerifyToken(null);
+				userRepository.save(userDetails);
+
+				response = "Email Verification Completed";
 
 			} else {
 

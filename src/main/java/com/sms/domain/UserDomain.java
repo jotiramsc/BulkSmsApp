@@ -48,6 +48,28 @@ public class UserDomain {
 	@Column
 	Timestamp resetTokenExpiry;
 
+	@Column(length = 36)
+	String emailVerifyToken;
+
+	@Column
+	boolean emailVerified;
+
+	public String getEmailVerifyToken() {
+		return emailVerifyToken;
+	}
+
+	public void setEmailVerifyToken(String emailVerifyToken) {
+		this.emailVerifyToken = emailVerifyToken;
+	}
+
+	public boolean isEmailVerified() {
+		return emailVerified;
+	}
+
+	public void setEmailVerified(boolean emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+
 	public Timestamp getResetTokenExpiry() {
 		return resetTokenExpiry;
 	}
