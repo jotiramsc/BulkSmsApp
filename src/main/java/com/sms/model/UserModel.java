@@ -1,6 +1,5 @@
 package com.sms.model;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -11,7 +10,7 @@ public class UserModel implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
-	int id;
+	Long id;
 
 	String firstName;
 	String lastName;
@@ -19,22 +18,20 @@ public class UserModel implements UserDetails {
 
 	long mobile;
 
-
-
 	String loginType;
 
 	String role;
 
-	Timestamp createdTs;
+	String createdTs;
 
-	Timestamp modifiedTs;
+	String modifiedTs;
 
 	String username;
 
 	String password;
-	
-	String resetToken;	
-	
+
+	String resetToken;
+
 	boolean emailVerified;
 
 	public boolean isEmailVerified() {
@@ -53,11 +50,11 @@ public class UserModel implements UserDetails {
 		this.resetToken = resetToken;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -76,8 +73,6 @@ public class UserModel implements UserDetails {
 	public void setMobile(long mobile) {
 		this.mobile = mobile;
 	}
-
-	
 
 	public String getRole() {
 		return role;
@@ -111,22 +106,22 @@ public class UserModel implements UserDetails {
 	}
 
 	@Override
-	public boolean isAccountNonExpired() {	
+	public boolean isAccountNonExpired() {
 		return true;
 	}
 
 	@Override
-	public boolean isAccountNonLocked() {	
+	public boolean isAccountNonLocked() {
 		return true;
 	}
 
 	@Override
-	public boolean isCredentialsNonExpired() {	
+	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
 	@Override
-	public boolean isEnabled() {	
+	public boolean isEnabled() {
 		return true;
 	}
 
@@ -154,19 +149,19 @@ public class UserModel implements UserDetails {
 		this.loginType = loginType;
 	}
 
-	public Timestamp getCreatedTs() {
+	public String getCreatedTs() {
 		return createdTs;
 	}
 
-	public void setCreatedTs(Timestamp createdTs) {
+	public void setCreatedTs(String createdTs) {
 		this.createdTs = createdTs;
 	}
 
-	public Timestamp getModifiedTs() {
+	public String getModifiedTs() {
 		return modifiedTs;
 	}
 
-	public void setModifiedTs(Timestamp modifiedTs) {
+	public void setModifiedTs(String modifiedTs) {
 		this.modifiedTs = modifiedTs;
 	}
 

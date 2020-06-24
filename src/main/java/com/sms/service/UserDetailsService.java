@@ -1,22 +1,31 @@
 package com.sms.service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.sms.domain.ContactGroupDomain;
+import com.sms.domain.CreditDomain;
 import com.sms.domain.UserDomain;
 import com.sms.model.UserModel;
+import com.sms.repository.ContactGroupRepository;
+import com.sms.repository.CreditRepository;
 import com.sms.repository.UserRepository;
+import com.sms.util.CommonLiterals;
 import com.sms.util.EmailSender;
 import com.sms.util.SmsException;
 
 @Service
-public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService {
+public class UserDetailsService
+		implements org.springframework.security.core.userdetails.UserDetailsService, Mappable<UserDomain, UserModel> {
 
 	@Autowired
 	private PasswordEncoder bcryptEncoder;
@@ -29,11 +38,18 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 	@Autowired
 	private EmailSender emailSender;
+	
+	@Autowired
+	private CreditRepository creditRepository;
+	
+	@Autowired
+	private ContactGroupRepository contactGroupRepository;
 
 	@Override
 	public UserModel loadUserByUsername(String username) {
 
-		return modelMapper.map(userRepository.findByUsername(username), UserModel.class);
+		UserDomain domain = userRepository.findByUsername(username);
+		return modelMapper.map(domain, UserModel.class);
 
 	}
 
@@ -48,12 +64,38 @@ public class UserDetailsService implements org.springframework.security.core.use
 			detail.setPassword(bcryptEncoder.encode(detail.getPassword()));
 			detail.setEmailVerifyToken(UUID.randomUUID().toString());
 			detail.setEmailVerified(false);
-			
-			emailSender.sendEmailVerificationMail(detail.getEmailVerifyToken());
+			detail.setCreatedTs(LocalDateTime.now());
+			detail.setModifiedTs(LocalDateTime.now());
 
-			return modelMapper.map(userRepository.save(detail), UserModel.class);
+			UserDomain userDomain = userRepository.save(detail);
+			setUpAccount(detail);
+			emailSender.sendEmailVerificationMail(detail.getEmailVerifyToken());
+			return modelMapper.map(userDomain, UserModel.class);
 
 		}
+
+	}
+
+	private void setUpAccount(UserDomain userDomain) {
+
+		// Add default credit
+		CreditDomain creditDomain = new CreditDomain();
+		creditDomain.setFreeCredit(CommonLiterals.DEFAULT_FREE_CREDIT);
+		creditDomain.setAvailableCredit(CommonLiterals.DEFAULT_FREE_CREDIT);
+		creditDomain.setCreatedTs(LocalDateTime.now());
+		creditDomain.setModifiedTs(LocalDateTime.now());
+		creditDomain.setUsedCredit(0);
+		creditDomain.setUserId(userDomain.getId());
+		creditRepository.save(creditDomain);		
+
+		// Create default group for All Contacts
+		ContactGroupDomain groupDomain = new ContactGroupDomain();
+		groupDomain.setGroupName(CommonLiterals.DEFAULT_GROUP_NAME);
+		groupDomain.setStatus(CommonLiterals.ACTIVE_STATUS);
+		groupDomain.setCreatedTs(LocalDateTime.now());
+		groupDomain.setUserId(userDomain.getId());
+		groupDomain.setModifiedTs(LocalDateTime.now());		
+		contactGroupRepository.save(groupDomain);
 
 	}
 
@@ -68,7 +110,8 @@ public class UserDetailsService implements org.springframework.security.core.use
 		} else {
 
 			userDetails.setResetToken(UUID.randomUUID().toString());
-			userDetails.setResetTokenExpiry(Timestamp.valueOf(LocalDateTime.now().plusDays(5)));
+			userDetails.setResetTokenExpiry(LocalDateTime.now().plusDays(5));
+			userDetails.setModifiedTs(LocalDateTime.now());
 			userRepository.save(userDetails);
 			emailSender.sendPasswordResetMail(userDetails.getResetToken());
 			response = "Reset password link has been sent on " + userModel.getEmail();
@@ -92,6 +135,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 				userDetails.setResetToken(null);
 				userDetails.setResetTokenExpiry(null);
 				userDetails.setPassword(bcryptEncoder.encode(userModel.getPassword()));
+				userDetails.setModifiedTs(LocalDateTime.now());
 				userRepository.save(userDetails);
 
 				response = "Password changed";
@@ -119,6 +163,7 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 				userDetails.setEmailVerified(true);
 				userDetails.setEmailVerifyToken(null);
+				userDetails.setModifiedTs(LocalDateTime.now());
 				userRepository.save(userDetails);
 
 				response = "Email Verification Completed";
@@ -135,11 +180,46 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 	private boolean validateResetToken(UserDomain userDetails, UserModel userModel) {
 		if (userDetails.getResetToken().equalsIgnoreCase(userModel.getResetToken())
-				&& (!userDetails.getResetTokenExpiry().before(Timestamp.valueOf(LocalDateTime.now())))) {
+				&& (!userDetails.getResetTokenExpiry().isBefore(LocalDateTime.now()))) {
 			return true;
 		}
 		return false;
 
 	}
 
+	@Override
+	public UserModel convertToModel(UserDomain domainObject) {
+		return modelMapper.map(domainObject, UserModel.class);
+	}
+
+	@Override
+	public UserDomain convertToDomain(UserModel modelObject) {
+		if (modelObject.getId() != null) {
+			UserDomain destination = userRepository.getOne(modelObject.getId());
+			modelMapper.map(modelObject, destination);
+			return destination;
+		}
+		return modelMapper.map(modelObject, UserDomain.class);
+	}
+
+	@Override
+	public List<UserModel> convertToModelList(List<UserDomain> domainlist) {
+		return domainlist.parallelStream().map(this::convertToModel).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<UserDomain> convertToDomainList(List<UserModel> modelList) {
+		return modelList.parallelStream().map(this::convertToDomain).collect(Collectors.toList());
+	}
+
+	public UserModel getCurrentUserDetails() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = null;
+		if (principal instanceof UserDetails) {
+			username = ((UserDetails) principal).getUsername();
+		} else {
+			username = principal.toString();
+		}
+		return this.loadUserByUsername(username);
+	}
 }

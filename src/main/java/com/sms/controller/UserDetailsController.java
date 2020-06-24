@@ -1,7 +1,5 @@
 package com.sms.controller;
 
-import javax.websocket.server.PathParam;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -56,7 +54,8 @@ public class UserDetailsController {
 	@PostMapping(value = "/signup")
 	public UserModel registerUser(@RequestBody UserModel userModel) throws SmsException {
 
-		return userDetailsService.saveUser(userModel);
+		UserModel model = userDetailsService.saveUser(userModel);
+		return model;
 	}
 
 	@PostMapping(value = "/resetPasswordLink")
@@ -70,11 +69,17 @@ public class UserDetailsController {
 
 		return userDetailsService.resetPassword(userModel);
 	}
-	
+
 	@GetMapping(value = "/verifyEmail/{token}")
 	public String verifyEmail(@PathVariable("token") String token) throws SmsException {
 
 		return userDetailsService.verifyEmail(token);
+	}
+
+	@GetMapping(value = "/userDetails")
+	public UserModel getUserDetails() throws SmsException {
+
+		return userDetailsService.getCurrentUserDetails();
 	}
 
 }
