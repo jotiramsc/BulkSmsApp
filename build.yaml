@@ -10,7 +10,7 @@ stages:
   displayName: Build stage sms app
   jobs:
   - job: MavenPackageAndPublishArtifacts
-  displayName1: Maven Package and Publish sms
+  displayName: Maven Package and Publish sms
   pool:
     vmImage: $(vmImageName)
 
