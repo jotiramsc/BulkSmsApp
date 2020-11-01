@@ -10,18 +10,18 @@ stages:
   displayName: Build stage sms app
   jobs:
   - job: MavenPackageAndPublishArtifacts
-  displayName: Maven Package and Publish Artifacts
+  displayName: Maven Package and Publish sms
   pool:
     vmImage: $(vmImageName)
 
   steps:
   - task: Maven@3
-    displayName: 'Maven Package'
+    displayName: 'Maven Package sms'
     inputs:
     mavenPomFile: 'pom.xml'
 
   - task: CopyFiles@2
-    displayName: 'Copy Files to artifact staging directory'
+    displayName: 'Copy Files to artifact staging sms directory'
     inputs:
     SourceFolder: '$(System.DefaultWorkingDirectory)'
     Contents: '**/target/*.?(war|jar)'
