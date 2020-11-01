@@ -10,5 +10,5 @@ jobs:
       echo Starting the build
       env
       java -version
-      ./mvnw clean package -Dmaven.test.failure.ignore=true -e -U
+      ./mvnw clean package 
     displayName: 'Build with Maven'
