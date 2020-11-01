@@ -9,10 +9,10 @@ stages:
 - stage: Build
   displayName: Build stage sms app
   jobs:
-  - job: MavenPackageAndPublishArtifacts
-  displayName: Maven Package and Publish sms
-  pool:
-    vmImage: $(vmImageName)
+    - job: MavenPackageAndPublishArtifacts
+    displayName: Maven Package and Publish sms
+    pool:
+      vmImage: $(vmImageName)
 
   steps:
   - task: Maven@3
