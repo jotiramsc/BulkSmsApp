@@ -7,7 +7,7 @@ variables:
 
 stages:
 - stage: Build
-  displayName: Build stage
+  displayName: Build stage sms app
   jobs:
   - job: MavenPackageAndPublishArtifacts
   displayName: Maven Package and Publish Artifacts
@@ -30,4 +30,3 @@ stages:
   - upload: $(Build.ArtifactStagingDirectory)
     artifact: drop
 
-- Save and run
