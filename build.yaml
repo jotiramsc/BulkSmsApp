@@ -12,14 +12,3 @@ jobs:
       java -version
       ./mvnw clean package -Dmaven.test.failure.ignore=true -e -U
     displayName: 'Build with Maven'
-- job: test
-  dependsOn: build
-  condition: succeeded()
-  pool:
-    vmImage: 'Ubuntu-16.04'
-  steps:
-  - script: |
-      echo Performing tests
-      env
-      ls -la
-    displayName: 'Running integration tests'
