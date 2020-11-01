@@ -12,10 +12,6 @@ jobs:
       java -version
       ./mvnw clean package -Dmaven.test.failure.ignore=true -e -U
     displayName: 'Build with Maven'
-  - script: |
-      env
-      echo docker build -t $(dockerId)/$(imageName) .
-    displayName: Docker Build
 - job: test
   dependsOn: build
   condition: succeeded()
