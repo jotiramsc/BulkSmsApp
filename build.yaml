@@ -5,12 +5,6 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |    
-      echo 'Hello world'
-      echo $(Build.ArtifactStagingDirectory)
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -22,6 +16,11 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: '-Dmaven.test.skip package'
 
+- task: PublishBuildArtifacts@1    
+  displayName: 'Publish Artifact: drop'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+
 - task: Bash@3
   inputs:
     targetType: 'inline'
@@ -29,8 +28,8 @@ steps:
       # Write your commands here
       
       echo 'Hello world'
-      cd  $(Build.ArtifactStagingDirectory)
-      ls  $(Build.ArtifactStagingDirectory)
+      cd  '$(Build.ArtifactStagingDirectory)/targate'
+      ls  '$(Build.ArtifactStagingDirectory)/targate'
       mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' 'BulkSmsApp-0.0.1-SNAPSHOT.zip'
-      ls  $(Build.ArtifactStagingDirectory)
+      ls  '$(Build.ArtifactStagingDirectory)/targate'
      
