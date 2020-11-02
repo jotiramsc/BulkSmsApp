@@ -17,6 +17,7 @@ steps:
     goals: '-Dmaven.test.skip package'
     
 - task: S3Upload@1
+  name: 'AmazonWebServices.aws-vsts-tools.S3Upload.S3Upload'
   inputs:
     awsCredentials: 'azure_user_aws'
     regionName: 'us-east-1'
