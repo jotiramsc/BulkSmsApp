@@ -25,5 +25,5 @@ steps:
       echo 'Hello world'
       cd  '/home/vsts/work/1/s/target'
       ls  '/home/vsts/work/1/s/target'
-      mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' BulkSmsApp-0.0.1-SNAPSHOT.zip'
+      mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' 'BulkSmsApp-0.0.1-SNAPSHOT.zip'
      
