@@ -23,4 +23,4 @@ steps:
       # Write your commands here
       
       echo 'Hello world'
-      mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' BulkSmsApp-0.0.1-SNAPSHOT.zip'
+      mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' 'BulkSmsApp-0.0.1-SNAPSHOT.zip'
