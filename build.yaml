@@ -20,9 +20,10 @@ steps:
     targetType: 'inline'
     script: |
       # Write your commands here
-      echo '$(Build.BuildId)'
-      echo '$(Build.BuildNumber)'
-      echo '$(Build.BinariesDirectory)'
-      echo '$(Build.BinariesDirectory)'
+      
       echo 'Hello world'
-  
+      cd  '$(Build.ArtifactStagingDirectory)/target'
+      ls  '$(Build.ArtifactStagingDirectory)/target'
+      mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' 'BulkSmsApp-0.0.1-SNAPSHOT.zip'
+      ls  '$(Build.ArtifactStagingDirectory)/target'
+     
