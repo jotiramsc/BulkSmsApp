@@ -1,6 +1,9 @@
 trigger:
 - master
 
+before_install:
+  - chmod +x build.sh
+  
 jobs:
 - job: build
   pool:
