@@ -15,4 +15,4 @@ steps:
       echo 'Hello world'
       cd  $(Build.ArtifactStagingDirectory)
       ls  $(Build.ArtifactStagingDirectory)
-      mv '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).jar' '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+     
