@@ -4,6 +4,7 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+
 steps:
 - task: Bash@3
   inputs:
@@ -12,5 +13,6 @@ steps:
       # Write your commands here
       
       echo 'Hello world'
-      ls -a $(Build.ArtifactStagingDirectory)
+      cd  $(Build.ArtifactStagingDirectory)
+      ls  $(Build.ArtifactStagingDirectory)
       mv '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).jar' '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
