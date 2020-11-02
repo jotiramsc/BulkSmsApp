@@ -32,8 +32,9 @@ steps:
       # Write your commands here
       
       echo '$(Build.BuildId)'
-      cd  '$(Build.ArtifactStagingDirectory)/target'
-      ls  '$(Build.ArtifactStagingDirectory)/target'
+      echo '$(Build.BuildNumber)'
+      cd  '$(Build.SourcesDirectory)/target'
+      ls  '$(Build.SourcesDirectory)/target'
       mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' '$(Build.BuildId).zip'
-      ls  '$(Build.ArtifactStagingDirectory)/target'
+      ls  '$(Build.SourcesDirectory)/target'
      
