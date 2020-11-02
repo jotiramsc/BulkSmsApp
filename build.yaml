@@ -5,32 +5,15 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'    
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: false
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: '-Dmaven.test.skip package'
-
-- task: CopyFiles@2
-  inputs:
-    Contents: '/home/vsts/work/1/s/target/*.jar'
-    targetFolder: '$(Build.ArtifactStagingDirectory)'    
-- task: PublishBuildArtifacts@1    
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
-
 - task: Bash@3
   inputs:
     targetType: 'inline'
     script: |
       # Write your commands here
-      
+      echo '$(Build.BuildId)'
+      echo '$(Build.BuildNumber)'
+      echo '$(Build.BinariesDirectory)'
+      echo '$(Build.BinariesDirectory)'
       echo 'Hello world'
       cd  '$(Build.ArtifactStagingDirectory)/target'
       ls  '$(Build.ArtifactStagingDirectory)/target'
