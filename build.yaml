@@ -17,11 +17,9 @@ steps:
     goals: '-Dmaven.test.skip package'
     
 - task: S3Upload@1
-  displayName: 'S3 Upload: angular-docker-bucket'
   inputs:
-    awsCredentials: 'azureUser'
+    awsCredentials: 'azure_user_aws'
     regionName: 'us-east-1'
-    bucketName: 'angular-docker-bucket'
-    sourceFolder: 'elastic-beanstalk'
-    globExpressions: output.zip
-    createBucket: true
+    bucketName: 'azureb1'
+    globExpressions: '**/*.jar'
+    filesAcl: 'bucket-owner-full-control'
