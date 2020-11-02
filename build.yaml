@@ -18,7 +18,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    Contents: '..\**\BulkSmsApp 0.0.1-SNAPSHOT.jar'
+    Contents: '\**\**.jar'
     targetFolder: '$(Build.ArtifactStagingDirectory)'    
 
 - task: PublishBuildArtifacts@1    
