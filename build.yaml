@@ -16,15 +16,6 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: '-Dmaven.test.skip package'
 
-- task: CopyFiles@2
-  inputs:
-    Contents: '\**\**.jar'
-    targetFolder: '$(Build.ArtifactStagingDirectory)'    
-
-- task: PublishBuildArtifacts@1    
-  displayName: 'Publish Artifact: drop'
-  inputs:
-    PathtoPublish: '$(build.artifactstagingdirectory)'
 - task: Bash@3
   inputs:
     targetType: 'inline'
@@ -32,6 +23,7 @@ steps:
       # Write your commands here
       
       echo 'Hello world'
-      cd  $(Build.ArtifactStagingDirectory)
-      ls  $(Build.ArtifactStagingDirectory)
+      cd  '/home/vsts/work/1/s/target'
+      ls  '/home/vsts/work/1/s/target'
+      mv 'BulkSmsApp-0.0.1-SNAPSHOT.jar' BulkSmsApp-0.0.1-SNAPSHOT.zip'
      
