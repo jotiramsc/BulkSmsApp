@@ -16,6 +16,10 @@ steps:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: '-Dmaven.test.skip package'
 
+- task: CopyFiles@2
+  inputs:
+    Contents: '/home/vsts/work/1/s/target/*.jar'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'    
 - task: PublishBuildArtifacts@1    
   displayName: 'Publish Artifact: drop'
   inputs:
