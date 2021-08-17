@@ -90,6 +90,17 @@ public class ContactService implements Mappable<ContactDomain, ContactModel> {
 
 		return convertToModelList(contactDomains);
 	}
+public List<ContactModel> getContactsByGroupId1(Long groupId, int page, int size) {
+
+		Optional<ContactGroupDomain> group = contactGroupRepository.findById(groupId);
+
+		List<ContactDomain> contactDomains = new ArrayList<>();
+		Pageable pageable = PageRequest.of(page, size, Sort.by(Order.asc("id")));
+		if (group.isPresent())
+			contactDomains = contactRepository.findByGroupId(groupId, pageable);
+
+		return convertToModelList(contactDomains);
+	}
 
 	public boolean saveUploadedContacts(List<ContactModel> modelList, UserModel userModel) throws SmsException {
 		ContactGroupDomain groupDomain = contactGroupRepository.findByUserIdAndGroupName(userModel.getId(),
